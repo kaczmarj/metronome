@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Metronome</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <h1>Metronome</h1>
+      </div>
+      <div class="row">
+        <input type="number" , name="tempo" id="tempoInput" value="120" />
+      </div>
+      <div class="row">
+        <button onclick="playPause()">Play / Pause</button>
+      </div>
+    <div class="row">
+        <p>If the tempo is changed while playing sound, please pause and then play again.</p>
+    </div>
+    </div>
+    <script>
+      var beepDuration = 0.15; // seconds
+      var beepIntervalId = null;
+      var isPlaying = false;
+
+      // https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/detune
+      // https://stackoverflow.com/a/41077092/5666087
+
+      // create web audio api context
+      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      var gainNode = audioCtx.createGain();
+      gainNode.connect(audioCtx.destination);
+      gainNode.gain.value = 0.1;
+
+      function playPause() {
+        var tempo = document.getElementById("tempoInput").value;
+        console.log(`is playing: ${isPlaying}`);
+        if (isPlaying) {
+          isPlaying = false;
+          clearInterval(beepIntervalId);
+          return;
+        } else {
+          isPlaying = true;
+          beepIntervalId = setInterval(function () {
+            var oscillator = audioCtx.createOscillator();
+            oscillator.connect(gainNode);
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // hertz
+            oscillator.start(audioCtx.currentTime);
+            oscillator.stop(audioCtx.currentTime + beepDuration);
+          }, (60 / tempo) * 1000);
+        }
+      }
+
+      //   function stop() {
+      //     isPlaying = false;
+      //   }
+    </script>
+  </body>
+</html>
