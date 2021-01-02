@@ -20,7 +20,7 @@
         <input type="number" name="tempo" id="tempoInput" value="120" />
       </div>
       <div class="row">
-        <button class="btn btn-primary" id="playPauseButton">
+        <button class="btn btn-primary" onclick="playPause()">
           Play / Pause
         </button>
       </div>
@@ -59,6 +59,7 @@
           return;
         } else {
           isPlaying = true;
+          audioCtx.resume()
           beepIntervalId = setInterval(function () {
             var oscillator = audioCtx.createOscillator();
             oscillator.connect(gainNode);
@@ -69,15 +70,6 @@
           }, (60 / tempo) * 1000);
         }
       }
-
-      // https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
-      // https://stackoverflow.com/a/18914640/5666087
-      // see if we want to use 'ontouchstart' or 'click'.
-      // mobile browsers will probably have 'ontouchstart'.
-      const touchEvent = "ontouchstart" in window ? "touchstart" : "click";
-      document
-        .getElementById("playPauseButton")
-        .addEventListener(touchEvent, playPause);
     </script>
   </body>
 </html>
