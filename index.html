@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Metronome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -19,7 +20,7 @@
         <input type="number" name="tempo" id="tempoInput" value="120" />
       </div>
       <div class="row">
-        <button onclick="playPause()" class="btn btn-primary">
+        <button class="btn btn-primary" id="playPauseButton">
           Play / Pause
         </button>
       </div>
@@ -37,7 +38,7 @@
       </div>
     </div>
     <script>
-      var beepDuration = 0.15; // seconds
+      const beepDuration = 0.15; // seconds
       var beepIntervalId = null;
       var isPlaying = false;
 
@@ -45,15 +46,13 @@
       // https://stackoverflow.com/a/41077092/5666087
 
       // create web audio api context
-      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-      var gainNode = audioCtx.createGain();
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const gainNode = audioCtx.createGain();
       gainNode.connect(audioCtx.destination);
       gainNode.gain.value = 0.1;
 
       function playPause() {
-        var tempo = document.getElementById("tempoInput").value;
-        console.log(`is playing: ${isPlaying}`);
+        const tempo = document.getElementById("tempoInput").value;
         if (isPlaying) {
           isPlaying = false;
           clearInterval(beepIntervalId);
@@ -71,9 +70,14 @@
         }
       }
 
-      //   function stop() {
-      //     isPlaying = false;
-      //   }
+      // https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
+      // https://stackoverflow.com/a/18914640/5666087
+      // see if we want to use 'ontouchstart' or 'click'.
+      // mobile browsers will probably have 'ontouchstart'.
+      const touchEvent = "ontouchstart" in window ? "touchstart" : "click";
+      document
+        .getElementById("playPauseButton")
+        .addEventListener(touchEvent, playPause);
     </script>
   </body>
 </html>
