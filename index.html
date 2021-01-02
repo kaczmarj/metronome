@@ -11,12 +11,12 @@
     />
   </head>
   <body>
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
         <h1>Metronome</h1>
       </div>
       <div class="row">
-        <input type="number" , name="tempo" id="tempoInput" value="120" />
+        <input type="number" name="tempo" id="tempoInput" value="120" />
       </div>
       <div class="row">
         <button onclick="playPause()">Play / Pause</button>
@@ -26,13 +26,24 @@
           If the tempo is changed while playing sound, please pause and then
           play again.
         </p>
-        <p>See the <a href="https://github.com/kaczmarj/metronome" target="_blank">source code on GitHub</a>.</p>
+        <p>
+          See the
+          <a href="https://github.com/kaczmarj/metronome" target="_blank"
+            >source code on GitHub</a
+          >.
+        </p>
       </div>
     </div>
     <script>
       var beepDuration = 0.15; // seconds
       var beepIntervalId = null;
       var isPlaying = false;
+
+      // for iphone compatibility
+      var touchEvent = "ontouchstart" in window ? "touchstart" : "click";
+      document
+        .getElementById("tempoInput")
+        .addEventListener(touchEvent, playPause());
 
       // https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/detune
       // https://stackoverflow.com/a/41077092/5666087
